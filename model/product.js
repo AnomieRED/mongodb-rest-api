@@ -5,7 +5,7 @@ const Template = new mongoose.Schema({
       type: String,
       minlength: 4,
       maxlength: 15,
-      require: true
+      required: true
    },
    price: { type: Number },
    balance: { type: Number },

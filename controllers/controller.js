@@ -5,11 +5,12 @@ class Controller {
    async addOne(req, res) {
       try {
          const { name, price, balance } = req.body;
-         const fileName = SaveFiles.uploadFiles(req.files.picture);
+         if (!name || name.length < 4 || name.length > 15) res.status(400).send({error: ''}); // Если обязательный параметр не передан какой смысл принимать фото
+         const fileName = SaveFiles.uploadFiles(req.files.picture); // а если файл не передан?
          const temp = await Template.create({ name, price, balance, picture: fileName });
          res.json(temp);
       } catch (error) {
-         res.status(500).json(error);
+         res.status(500).send({error: error.message}); // и так на всех остальных
       }
    }
 
@@ -28,8 +29,12 @@ class Controller {
 
    async getAll(req, res) {
       try {
-         const { page = 1, limit = 10 } = req.query;
-         const temp = await Template.find().limit(limit * 1).skip((page - 1) * limit);
+         const { page = 1, limit = 10, name, price } = req.query;
+         const query = {};
+         if (name) {
+            query.name = name;
+         } // и так далее со всем параметрами, выносить отдельный метод для поиска нет необходимости, точно не в этом случае
+         const temp = await Template.find(query).limit(limit * 1).skip((page - 1) * limit);
          return res.json(temp);
       } catch (error) {
          res.status(500).json(error);
@@ -58,7 +63,7 @@ class Controller {
             res.status(404).json('id not specified');
          }
          const temp = await Template.findByIdAndDelete(id);
-         SaveFiles.removeFile(findProduct.picture);
+         SaveFiles.removeFile(findProduct.picture); // как только у нас продукт без изображения прилка крашится
          return res.json(temp);
       } catch (error) {
          res.status(500).json(error);
@@ -68,10 +73,9 @@ class Controller {
    async filterProduct(req, res) {
       try {
          const userPrice = Number(req.params.price);
-         if (!userName) {
+         if (!userName) {  //дальше этой строчки метод работать никогда не будет
             res.status(404).json('there is no such product');
          }
-         const regEx = /w+/gi
          const temp = await Template.find({ $and: [{ name: userName }, { price: { $lte: userPrice } }], balance: { $exists: true } }).sort({ 'price': 1 });
          return res.json(temp);
       } catch (error) {
