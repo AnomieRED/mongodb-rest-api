@@ -4,7 +4,7 @@ import router from './routes/router.js';
 import fileUpload from 'express-fileupload';
 
 const PORT = process.env.PORT ?? 8080;
-const DB_URL = 'mongodb://localhost:27017';
+const DB_URL = process.env.DB_URL || 'mongodb://localhost:27017';
 const app = express();
 
 app.use(express.json());
@@ -14,7 +14,7 @@ app.use('/', router);
 
 async function startMongo() {
    try {
-      mongoose.connect(DB_URL, { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false });
+      await mongoose.connect(DB_URL, { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false });
       app.listen(PORT, () => {
          console.log(`Server started on port ${PORT}...`);
       });
