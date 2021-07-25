@@ -5,12 +5,13 @@ class Controller {
    async addOne(req, res) {
       try {
          const { name, price, balance } = req.body;
-         if (!name || name.length < 4 || name.length > 15) res.status(400).send({error: ''}); // Если обязательный параметр не передан какой смысл принимать фото
-         const fileName = SaveFiles.uploadFiles(req.files.picture); // а если файл не передан?
+         if (!name || name.length < 4 || name.length > 15) res.status(400).send({ error: 'check your name' });
+         if (!req.files) res.status(400).send({ error: 'file is empty' });
+         const fileName = SaveFiles.uploadFiles(req.files.picture);
          const temp = await Template.create({ name, price, balance, picture: fileName });
          res.json(temp);
       } catch (error) {
-         res.status(500).send({error: error.message}); // и так на всех остальных
+         res.status(500).send({ error: error.message });
       }
    }
 
@@ -23,7 +24,7 @@ class Controller {
          const temp = await Template.findById(id);
          return res.json(temp);
       } catch (error) {
-         res.status(500).json(error);
+         res.status(500).send({ error: error.message });
       }
    }
 
@@ -31,13 +32,12 @@ class Controller {
       try {
          const { page = 1, limit = 10, name, price } = req.query;
          const query = {};
-         if (name) {
-            query.name = name;
-         } // и так далее со всем параметрами, выносить отдельный метод для поиска нет необходимости, точно не в этом случае
-         const temp = await Template.find(query).limit(limit * 1).skip((page - 1) * limit);
+         if (name) query.name = name;
+         if (price) query.price = price;
+         const temp = await Template.find({ $and: [{ name: query.name }, { price: { $lte: query.price } }], balance: { $exists: true } }).limit(limit * 1).skip((page - 1) * limit).sort({ 'price': 1 });
          return res.json(temp);
       } catch (error) {
-         res.status(500).json(error);
+         res.status(500).send({ error: error.message });
       }
    }
 
@@ -50,7 +50,7 @@ class Controller {
          const updated = await Template.findByIdAndUpdate(temp._id, temp, { new: true });
          return res.json(updated);
       } catch (error) {
-         res.status(500).json(error);
+         res.status(500).send({ error: error.message });
       }
    }
 
@@ -58,28 +58,17 @@ class Controller {
       try {
          const id = req.params.id;
          const findProduct = await Template.findById(id);
-
+         if (!findProduct.picture) {
+            res.status(500).send({ error: error.message });
+         }
          if (!id) {
             res.status(404).json('id not specified');
          }
          const temp = await Template.findByIdAndDelete(id);
-         SaveFiles.removeFile(findProduct.picture); // как только у нас продукт без изображения прилка крашится
+         SaveFiles.removeFile(findProduct.picture);
          return res.json(temp);
       } catch (error) {
-         res.status(500).json(error);
-      }
-   }
-
-   async filterProduct(req, res) {
-      try {
-         const userPrice = Number(req.params.price);
-         if (!userName) {  //дальше этой строчки метод работать никогда не будет
-            res.status(404).json('there is no such product');
-         }
-         const temp = await Template.find({ $and: [{ name: userName }, { price: { $lte: userPrice } }], balance: { $exists: true } }).sort({ 'price': 1 });
-         return res.json(temp);
-      } catch (error) {
-         res.status(500).json(error);
+         res.status(500).send({ error: error.message });
       }
    }
 }

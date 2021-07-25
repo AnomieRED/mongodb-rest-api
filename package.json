@@ -12,10 +12,10 @@
   "author": "Yurii",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^7.31.0",
     "nodemon": "^2.0.12"
   },
   "dependencies": {
-    "eslint": "^7.31.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "mongoose": "^5.13.3",
