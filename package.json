@@ -6,20 +6,41 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "lint": "eslint ./",
+    "lint:fix": "eslint ./ --fix --color"
   },
   "keywords": [],
   "author": "Yurii",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^7.31.0",
-    "nodemon": "^2.0.12"
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^7.0.1",
+    "lint-staged": "^11.1.1",
+    "nodemon": "^2.0.12",
+    "prettier": "^2.3.2"
   },
   "dependencies": {
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "mongoose": "^5.13.3",
+    "npm": "^7.20.1",
     "pug": "^3.0.2",
     "uuid": "^8.3.2"
+  },
+  "husky": {
+	  "hooks": {
+		  "pre-commit": "lint-staged"
+	  }
+  },
+  "lint-staged": {
+	  "*.js": [
+		  "npm run lint:fix",
+		  "git add"
+	  ]
   }
 }
