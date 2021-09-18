@@ -15,24 +15,16 @@ class SaveFiles {
 		}
 	}
 
-	async createDirectory() {
-		try {
-			fs.mkdir('static', { recursive: true }, (err) => {
-				if (err) throw err;
-			});
-		} catch (error) {
-			console.log(error);
-		}
+	createDirectory() {
+		fs.mkdir('static', { recursive: true }, (err) => {
+			if (err) throw err;
+		});
 	}
 
-	async removeFile(file) {
-		try {
-			fs.unlink('static/' + file, (err) => {
-				if (err) throw err;
-			});
-		} catch (error) {
-			console.log(error);
-		}
+	removeFile(file) {
+		fs.unlink('static/' + file, (err) => {
+			if (err) throw err;
+		});
 	}
 }
 

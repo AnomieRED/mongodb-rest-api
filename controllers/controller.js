@@ -6,11 +6,11 @@ class Controller {
 		try {
 			const { name, price, balance } = req.body;
 			if (!name || name.length < 4 || name.length > 15) {
-				res.status(400).send({ error: 'check your name' });
+				return res.status(400).send({ error: 'check your name' });
 			}
 			const fileName = SaveFiles.uploadFiles(req.files.picture);
 			if (!req.files) {
-				res.status(400).send({ error: 'file is empty' });
+				return res.status(400).send({ error: 'file is empty' });
 			}
 			const temp = await Template.create({
 				name,
@@ -18,7 +18,7 @@ class Controller {
 				balance,
 				picture: fileName,
 			});
-			res.json(temp);
+			res.status(201).json(temp);
 		} catch (error) {
 			res.status(500).send({ error: error.message });
 		}
@@ -28,10 +28,10 @@ class Controller {
 		try {
 			const id = req.params.id;
 			if (!id) {
-				res.status(404).json('id not specified');
+				return res.status(404).json('id not specified');
 			}
 			const temp = await Template.findById(id);
-			return res.json(temp);
+			res.json(temp);
 		} catch (error) {
 			res.status(500).send({ error: error.message });
 		}
@@ -50,7 +50,7 @@ class Controller {
 				.limit(limit * 1)
 				.skip((page - 1) * limit)
 				.sort({ price: 1 });
-			return res.json(temp);
+			res.json(temp);
 		} catch (error) {
 			res.status(500).send({ error: error.message });
 		}
@@ -60,12 +60,12 @@ class Controller {
 		try {
 			const temp = req.body;
 			if (!temp._id) {
-				res.status(404).json('id not specified');
+				return res.status(404).json('id not specified');
 			}
 			const updated = await Template.findByIdAndUpdate(temp._id, temp, {
 				new: true,
 			});
-			return res.json(updated);
+			res.json(updated);
 		} catch (error) {
 			res.status(500).send({ error: error.message });
 		}
@@ -76,11 +76,11 @@ class Controller {
 			const id = req.params.id;
 			const findProduct = await Template.findById(id);
 			if (!id) {
-				res.status(404).json('id not specified');
+				return res.status(404).json('id not specified');
 			}
 			const temp = await Template.findByIdAndDelete(id);
 			SaveFiles.removeFile(findProduct.picture);
-			return res.json(temp);
+			res.json(temp);
 		} catch (error) {
 			res.status(500).send({ error: error.message });
 		}
