@@ -1,9 +1,11 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import router from './routes/router.js';
 import fileUpload from 'express-fileupload';
 import mongoose from './data/mongodb.js';
+dotenv.config();
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.SERVER_PORT || 8080;
 
 const app = express();
 

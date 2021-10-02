@@ -14,22 +14,23 @@
   "author": "Yurii",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^7.31.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "husky": "^7.0.1",
-    "lint-staged": "^11.1.1",
-    "nodemon": "^2.0.12",
-    "prettier": "^2.3.2"
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.2",
+    "lint-staged": "^11.1.2",
+    "nodemon": "^2.0.13",
+    "npm-check-updates": "^11.8.5",
+    "prettier": "^2.4.1"
   },
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
-    "mongoose": "^5.13.5",
-    "npm": "^7.20.1",
+    "mongoose": "^6.0.8",
+    "npm": "^7.24.1",
     "pug": "^3.0.2",
     "uuid": "^8.3.2"
   },
